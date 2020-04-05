@@ -43,6 +43,8 @@
 /* USER CODE BEGIN Includes */
 #define MASK_MAX 256
 #define BYTE_COUNT 8
+#define GPIOA_IDR 0x40010808
+#define GPIOB_ODR 0x40010C0C
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -51,8 +53,8 @@ TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint8_t phy_to_dll_rx_bus;
-uint8_t dll_to_phy_tx_bus;
+static uint32_t phy_to_dll_rx_bus;
+static uint8_t dll_to_phy_tx_bus;
 uint8_t dll_new_data = 0;
 uint8_t phy_rx_new_data = 0;
 
@@ -94,8 +96,8 @@ void phy_TX()
 	if(dll_new_data)//dll tranfered new data to send
 	{
 		HAL_GPIO_WritePin(phy_tx_busy_GPIO_Port, phy_tx_busy_Pin, GPIO_PIN_SET);//set phy_tx_busy to 1
-		HAL_TIM_Base_Start(&htim2);
-		HAL_TIM_Base_Start_IT(&htim2);
+		HAL_TIM_Base_Start(&htim3);
+		HAL_TIM_Base_Start_IT(&htim3);
 		dll_new_data = 0;
 	}
 	else if(!prev_tx_clock && tx_clock && mask <= MASK_MAX)//sending data
@@ -115,8 +117,8 @@ void phy_TX()
 	}
 	else if(mask > MASK_MAX)//sent the whole byte
 	{
-		HAL_TIM_Base_Stop(&htim2);
-		HAL_TIM_Base_Stop_IT(&htim2);
+		HAL_TIM_Base_Stop(&htim3);
+		HAL_TIM_Base_Stop_IT(&htim3);
 		HAL_GPIO_WritePin(phy_tx_data_GPIO_Port, phy_tx_data_Pin, GPIO_PIN_RESET);//set clock to 0
 		HAL_GPIO_WritePin(phy_tx_busy_GPIO_Port, phy_tx_busy_Pin, GPIO_PIN_RESET);//set phy_tx_busy to 0
 		mask = 1;
@@ -150,7 +152,33 @@ void phy_RX()
 
 void interface()
 {
-	
+	static int first = 1;
+	static uint32_t *GPIOA_IDR_PTR = (uint32_t*)GPIOA_IDR;
+	static uint32_t *GPIOB_ODR_PTR = (uint32_t*)GPIOB_ODR;
+	static uint32_t da_bits = 0;
+	if(first)
+	{
+		HAL_TIM_Base_Start(&htim2);
+		HAL_TIM_Base_Start_IT(&htim2);
+		first = 0;
+		HAL_GPIO_WritePin(phy_alive_GPIO_Port,phy_alive_Pin,GPIO_PIN_SET);		
+	}
+	else if(prev_interface_clock && !interface_clock && HAL_GPIO_ReadPin(dll_to_phy_tx_bus_valid_GPIO_Port,dll_to_phy_tx_bus_valid_Pin))
+	{
+		dll_to_phy_tx_bus = (*GPIOA_IDR_PTR & 255);
+		dll_new_data = 1;
+	}
+	else if(!prev_interface_clock && interface_clock)
+	{
+		if(HAL_GPIO_ReadPin(phy_to_dll_rx_bus_valid_GPIO_Port,phy_to_dll_rx_bus_valid_Pin)) //reset valid one clock cycle after data had been already happend in the past progressive sent to the dll(grammer bitch)
+			HAL_GPIO_WritePin(phy_to_dll_rx_bus_valid_GPIO_Port,phy_to_dll_rx_bus_valid_Pin,GPIO_PIN_RESET);
+		if(phy_rx_new_data)
+		{
+			da_bits = (*GPIOB_ODR_PTR & 255) + (phy_to_dll_rx_bus << 3);
+			*GPIOB_ODR_PTR = da_bits;
+			HAL_GPIO_WritePin(phy_to_dll_rx_bus_valid_GPIO_Port,phy_to_dll_rx_bus_valid_Pin,GPIO_PIN_SET);
+		}
+	}
 }
 
 void sampleClocks()
