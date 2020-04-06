@@ -234,6 +234,7 @@ int main(void)
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
 	HAL_GPIO_WritePin(phy_tx_clock_GPIO_Port,phy_tx_clock_Pin, GPIO_PIN_RESET);//set clock to 0
+	HAL_GPIO_WritePin(interface_clock_GPIO_Port,interface_clock_Pin, GPIO_PIN_RESET);//set clock to 0
 	tx_clock = 0;
 	phy_rx_clock = 0;
 	interface_clock = 0;
@@ -245,6 +246,7 @@ int main(void)
   {
 		phy_layer();
 		interface();
+		sampleClocks();
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
