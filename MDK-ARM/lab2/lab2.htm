@@ -3,7 +3,7 @@
 <title>Static Call Graph - [lab2\lab2.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image lab2\lab2.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Apr 06 12:51:49 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Tue Apr 07 16:45:42 2020
 <BR><P>
 <H3>Maximum Stack Usage =        136 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -566,8 +566,8 @@ Global Symbols
 
 <P><STRONG><a name="[77]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
-<P><STRONG><a name="[63]"></a>interface</STRONG> (Thumb, 130 bytes, Stack size 16 bytes, main.o(i.interface))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = interface
+<P><STRONG><a name="[63]"></a>interface</STRONG> (Thumb, 152 bytes, Stack size 24 bytes, main.o(i.interface))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = interface
 </UL>
 <BR>[Calls]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Start_IT
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Start
@@ -577,7 +577,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[35]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[35]"></a>main</STRONG> (Thumb, 98 bytes, Stack size 0 bytes, main.o(i.main))
+<P><STRONG><a name="[35]"></a>main</STRONG> (Thumb, 114 bytes, Stack size 0 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = main &rArr; SystemClock_Config &rArr; HAL_RCC_ClockConfig &rArr; HAL_InitTick &rArr; HAL_NVIC_SetPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[40]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
@@ -594,7 +594,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>
-<P><STRONG><a name="[6a]"></a>phy_RX</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, main.o(i.phy_RX))
+<P><STRONG><a name="[6a]"></a>phy_RX</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, main.o(i.phy_RX))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = phy_RX
 </UL>
 <BR>[Calls]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_ReadPin
@@ -602,8 +602,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;phy_layer
 </UL>
 
-<P><STRONG><a name="[6b]"></a>phy_TX</STRONG> (Thumb, 164 bytes, Stack size 32 bytes, main.o(i.phy_TX))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = phy_TX
+<P><STRONG><a name="[6b]"></a>phy_TX</STRONG> (Thumb, 166 bytes, Stack size 24 bytes, main.o(i.phy_TX))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = phy_TX
 </UL>
 <BR>[Calls]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Stop_IT
 <LI><a href="#[6c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Stop
@@ -615,7 +615,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[68]"></a>phy_layer</STRONG> (Thumb, 14 bytes, Stack size 8 bytes, main.o(i.phy_layer))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = phy_layer &rArr; phy_TX
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = phy_layer &rArr; phy_TX
 </UL>
 <BR>[Calls]<UL><LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;phy_TX
 <LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;phy_RX
@@ -623,7 +623,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[35]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[69]"></a>sampleClocks</STRONG> (Thumb, 54 bytes, Stack size 16 bytes, main.o(i.sampleClocks))
+<P><STRONG><a name="[69]"></a>sampleClocks</STRONG> (Thumb, 66 bytes, Stack size 16 bytes, main.o(i.sampleClocks))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = sampleClocks
 </UL>
 <BR>[Calls]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_ReadPin

@@ -27,7 +27,26 @@ Project File Date:  04/05/2020
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'lab2'
-"lab2\lab2.axf" - 0 Error(s), 0 Warning(s).
+compiling main.c...
+../Src/main.c(98): warning:  #177-D: variable "data_to_send"  was declared but never referenced
+  	static uint8_t data_to_send = 0;
+../Src/main.c(58): warning:  #550-D: variable "dll_to_phy_tx_bus_valid"  was set but never used
+  static uint32_t dll_to_phy_tx_bus_valid = 0;
+../Src/main.c(59): warning:  #550-D: variable "phy_to_dll_rx_bus_valid"  was set but never used
+  static uint32_t phy_to_dll_rx_bus_valid = 0;
+../Src/main.c(63): warning:  #550-D: variable "phy_tx_data_value"  was set but never used
+  static uint32_t phy_tx_data_value = 0;
+../Src/main.c(64): warning:  #550-D: variable "phy_rx_data_value"  was set but never used
+  static uint32_t phy_rx_data_value = 0;
+../Src/main.c(73): warning:  #550-D: variable "alive"  was set but never used
+  static uint32_t alive = 0;
+../Src/main.c(74): warning:  #550-D: variable "phy_busy"  was set but never used
+  static uint32_t phy_busy = 0;
+../Src/main.c: 7 warnings, 0 errors
+linking...
+Program Size: Code=4748 RO-data=284 RW-data=108 ZI-data=1156  
+FromELF: creating hex file...
+"lab2\lab2.axf" - 0 Error(s), 7 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -41,7 +60,7 @@ Package Vendor: Keil
   C:\Users\User\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>
