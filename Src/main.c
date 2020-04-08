@@ -139,24 +139,27 @@ After reeiving 8 bits the function transfers the data to the dll_rx.
 void phy_RX()
 {
 	static uint32_t input = 0;
-	static uint32_t counter = 0;
+	static uint32_t counter = 1;
 	static uint32_t data_input = 0;
 	
 	if(!phy_rx_clock && prev_rx_clock)
 	{
 		input = phy_rx_data_value = HAL_GPIO_ReadPin(phy_rx_data_GPIO_Port, phy_rx_data_Pin);
-		data_input += (input << counter);//assemble the input data
-		counter++;
+		data_input += (input * counter);//assemble the input data
+		counter*=2;
 	}
-	if(counter == BYTE_COUNT)//received a byte
+	if(counter > MASK_MAX)//received a byte
 	{
 		phy_to_dll_rx_bus = data_input;
 		phy_rx_new_data = 1;
-		counter = 0;
+		counter = 1;
 		data_input = 0;
 	}
 }
 
+/*
+The function communicates with the dll layer
+*/
 void interface()
 {
 	static int first_rising_edge = 1;
@@ -164,19 +167,19 @@ void interface()
 	static uint32_t *GPIOA_IDR_PTR = (uint32_t*)GPIOA_IDR;
 	static uint32_t *GPIOB_ODR_PTR = (uint32_t*)GPIOB_ODR;
 	static uint32_t da_bits = 0;
-	if(first_iteration)
+	if(first_iteration)//first iteration of the function means the interface clock isnt on.
 	{
 		HAL_TIM_Base_Start(&htim2);
 		HAL_TIM_Base_Start_IT(&htim2);
-		first_iteration = 0;		
+		first_iteration = 0;
 	}
 	else if(prev_interface_clock && !interface_clock && HAL_GPIO_ReadPin(dll_to_phy_tx_bus_valid_GPIO_Port,dll_to_phy_tx_bus_valid_Pin))
-	{
+	{//interface clock on falling edge and dll sent new data(valid == 1)
 		dll_to_phy_tx_bus = (*GPIOA_IDR_PTR & 255);
 		dll_new_data = 1;
 	}
 	else if(!prev_interface_clock && interface_clock)
-	{
+	{//interface clock on rising edge
 		if(first_rising_edge)
 		{
 			HAL_GPIO_WritePin(phy_alive_GPIO_Port,phy_alive_Pin,GPIO_PIN_SET);
@@ -184,12 +187,12 @@ void interface()
 			alive = 1;
 		}
 		if(HAL_GPIO_ReadPin(phy_to_dll_rx_bus_valid_GPIO_Port,phy_to_dll_rx_bus_valid_Pin)) //reset valid one clock cycle after data had been already happend in the past progressive sent to the dll(grammer bitch)
-		{
+		{//if the valid is 1, which means data was sent to the dll one clock cycke ago, we need to reset valid to 0 
 			HAL_GPIO_WritePin(phy_to_dll_rx_bus_valid_GPIO_Port,phy_to_dll_rx_bus_valid_Pin,GPIO_PIN_RESET);
 			phy_to_dll_rx_bus_valid = 0;
 		}
 		if(phy_rx_new_data)
-		{
+		{//phy_tx received new data, send it to the dll than
 			da_bits = (*GPIOB_ODR_PTR & 255) + (phy_to_dll_rx_bus << 8);
 			*GPIOB_ODR_PTR = da_bits;
 			HAL_GPIO_WritePin(phy_to_dll_rx_bus_valid_GPIO_Port,phy_to_dll_rx_bus_valid_Pin,GPIO_PIN_SET);
@@ -208,6 +211,7 @@ void sampleClocks()
 	phy_rx_clock = HAL_GPIO_ReadPin(phy_rx_clock_GPIO_Port,phy_rx_clock_Pin);
 	interface_clock = HAL_GPIO_ReadPin(interface_clock_GPIO_Port,interface_clock_Pin);
 	dll_to_phy_tx_bus_valid = HAL_GPIO_ReadPin(dll_to_phy_tx_bus_valid_GPIO_Port, dll_to_phy_tx_bus_valid_Pin);
+	phy_to_dll_rx_bus_valid = HAL_GPIO_ReadPin(phy_to_dll_rx_bus_valid_GPIO_Port, phy_to_dll_rx_bus_valid_Pin);
 }
 
 void phy_layer()
@@ -258,7 +262,6 @@ int main(void)
 	tx_clock = 0;
 	phy_rx_clock = 0;
 	interface_clock = 0;
-	phy_to_dll_rx_bus_valid = 0;
 	/* USER CODE END 2 */
 
   /* Infinite loop */
