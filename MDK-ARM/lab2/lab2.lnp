@@ -1,8 +1,8 @@
 --cpu Cortex-M3
+"lab2\startup_stm32f103xb.o"
 "lab2\main.o"
 "lab2\stm32f1xx_it.o"
 "lab2\stm32f1xx_hal_msp.o"
-"lab2\startup_stm32f103xb.o"
 "lab2\stm32f1xx_hal_gpio_ex.o"
 "lab2\stm32f1xx_hal_tim.o"
 "lab2\stm32f1xx_hal_tim_ex.o"
